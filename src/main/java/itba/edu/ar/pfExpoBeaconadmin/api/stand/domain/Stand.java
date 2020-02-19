@@ -35,7 +35,7 @@ public class Stand {
      */
     private String cover;
 
-    //TODO add pictures
+    //TODO: (ma 2020-2-19) add pictures
 
     /**
      * Empty constructor. For Hibernate purposes.

@@ -56,7 +56,7 @@ public class StandServiceTest {
         Mockito.when(standRepository.findAll()).thenReturn(stands);
         Mockito.when(standRepository.findById("1")).thenReturn(Optional.of(stand1));
         Mockito.when(standRepository.findById("2")).thenReturn(Optional.of(stand2));
-        //TODO se podria usar una expresion regular para que devuelva empty para todos los valores distintos a 1 y 2
+        //TODO: (ma 2020-2-19)se podria usar una expresion regular para que devuelva empty para todos los valores distintos a 1 y 2
         Mockito.when(standRepository.findById("3")).thenReturn(Optional.empty());
     }
 

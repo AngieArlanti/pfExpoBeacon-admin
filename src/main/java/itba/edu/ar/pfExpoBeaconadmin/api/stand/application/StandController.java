@@ -16,7 +16,7 @@ public class StandController {
 
     @PostMapping("/stand/add")
     public ResponseEntity<Stand> addStand(final @RequestBody Stand stand) {
-        //TODO validate info
+        //TODO: (ma 2020-2-19)
         final Stand newStand = standService.create(stand);
         return ResponseEntity.ok(newStand);
     }
@@ -28,7 +28,7 @@ public class StandController {
 
     @GetMapping("/stand/{id}")
     public ResponseEntity<Stand> getStandById(final @PathVariable("id") String id) throws ResourceNotFoundException {
-        //TODO validate id
+        //TODO: (ma 2020-2-19)
         final Stand stand = standService.getById(id);
         return ResponseEntity.ok(stand);
     }
