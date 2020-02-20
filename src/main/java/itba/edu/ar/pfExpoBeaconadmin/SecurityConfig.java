@@ -1,8 +1,7 @@
-package itba.edu.ar.pfExpoBeaconadmin.api.stand.application;
+package itba.edu.ar.pfExpoBeaconadmin;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -17,7 +16,7 @@ import java.util.Arrays;
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
-    protected void configure(HttpSecurity http) throws Exception
+    protected void configure(final HttpSecurity http) throws Exception
     {
         http
                 .cors().and()
@@ -29,7 +28,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     @Autowired
-    public void configureGlobal(AuthenticationManagerBuilder auth)
+    public void configureGlobal(final AuthenticationManagerBuilder auth)
             throws Exception
     {
         //TODO: (ma 2020-2-19) capaz es mejor ponerlo en un archivo properties o configurable

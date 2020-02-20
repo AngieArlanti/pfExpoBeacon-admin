@@ -1,6 +1,7 @@
 package itba.edu.ar.pfExpoBeaconadmin.api.stand.domain;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
 
 /**
  * A Stand.
@@ -9,7 +10,7 @@ import javax.persistence.*;
 public class Stand {
 
     /**
-     * Stand's Id.
+     * Stand's Id. Reference to Beacon Id
      */
     @Id
     private String id;
@@ -17,12 +18,13 @@ public class Stand {
     /**
      * The Stand's title.
      */
+    @NotBlank(message = "Title is mandatory")
     private String title;
 
     /**
      * The Stand's short description.
      */
-    @Column(name = "short_description", nullable = false)
+    @NotBlank(message = "Short description is mandatory")
     private String shortDescription;
 
     /**
@@ -33,6 +35,7 @@ public class Stand {
     /**
      * The Stand's cover icon.
      */
+    @NotBlank(message = "Cover is mandatory")
     private String cover;
 
     //TODO: (ma 2020-2-19) add pictures
@@ -63,6 +66,10 @@ public class Stand {
      */
     public String getId() {
         return id;
+    }
+
+    public void setId(final String id) {
+        this.id = id;
     }
 
     /**
