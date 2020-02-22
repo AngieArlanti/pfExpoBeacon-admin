@@ -1,7 +1,11 @@
 package itba.edu.ar.pfExpoBeaconadmin.api.stand.application;
 
 import itba.edu.ar.pfExpoBeaconadmin.api.beacon.application.BeaconService;
-import itba.edu.ar.pfExpoBeaconadmin.api.exception.ResourceNotFoundException;
+import itba.edu.ar.pfExpoBeaconadmin.api.beacon.model.Beacon;
+import itba.edu.ar.pfExpoBeaconadmin.api.exception.*;
+import itba.edu.ar.pfExpoBeaconadmin.api.picture.application.PictureService;
+import itba.edu.ar.pfExpoBeaconadmin.api.position.application.PositionService;
+import itba.edu.ar.pfExpoBeaconadmin.api.position.model.Position;
 import itba.edu.ar.pfExpoBeaconadmin.api.stand.domain.Stand;
 import itba.edu.ar.pfExpoBeaconadmin.api.stand.domain.StandRepository;
 import org.junit.Before;
@@ -17,6 +21,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -24,6 +29,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.empty;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.core.Is.is;
+import static org.mockito.ArgumentMatchers.any;
 
 @RunWith(SpringRunner.class)
 public class StandServiceTest {
@@ -46,13 +52,19 @@ public class StandServiceTest {
     @MockBean
     private BeaconService beaconService;
 
+    @MockBean
+    private PositionService positionService;
+
+    @MockBean
+    private PictureService pictureService;
+
     @Rule
     public ExpectedException exceptionRule = ExpectedException.none();
 
     @Before
     public void setUp() {
-        final Stand stand1 = new Stand("0C:F3:EE:08:FC:DD","stand1", "Primer stand de la feria");
-        final Stand stand2 = new Stand("0C:F3:EE:04:19:2F","stand2", "Segundo stand de la feria");
+        final Stand stand1 = new Stand("0C:F3:EE:08:FC:DD", "stand1", "Primer stand de la feria");
+        final Stand stand2 = new Stand("0C:F3:EE:04:19:2F", "stand2", "Segundo stand de la feria");
 
         final List<Stand> stands = new ArrayList<>();
         stands.add(stand1);
@@ -61,24 +73,35 @@ public class StandServiceTest {
         Mockito.when(standRepository.findAll()).thenReturn(stands);
         Mockito.when(standRepository.findById("0C:F3:EE:08:FC:DD")).thenReturn(Optional.of(stand1));
         Mockito.when(standRepository.findById("0C:F3:EE:04:19:2F")).thenReturn(Optional.of(stand2));
-        //TODO: (ma 2020-2-19) se podria usar una expresion regular para que devuelva empty para todos los valores distintos a 1 y 2
+        //TODO se podria usar una expresion regular para que devuelva empty para todos los valores distintos a 1 y 2
         Mockito.when(standRepository.findById("3")).thenReturn(Optional.empty());
     }
 
-   /* TODO: (ma 2020-2-20) rehacer esto teniendo en cuenta los beacon
-   @Test
-    public void create_newStandWhenValidData_isOk() throws BeaconNotFoundException {
-        final Stand stand1 = new Stand("1", "stand1", "Primer stand de la feria");
-        Mockito.when(standRepository.save(stand1)).thenReturn(stand1);
 
-        final Stand newStand = standService.create(stand1);
+    @Test
+    public void create_newStandWhenValidData_isOk() throws BeaconNotFoundException,
+            PositionNotFoundException, PositionNotAvailableException, PictureStorageException {
+        final Beacon beacon = new Beacon("1");
+        Mockito.when(beaconService.getBeacon()).thenReturn(beacon);
+        final Position position = new Position(1, -34.6403175, -58.4018125);
+        Mockito.when(positionService.used(1)).thenReturn(position);
+        final Stand stand1 = new Stand(beacon.getId(), "stand1", "Primer stand de la feria",
+                "...", "...", position.getLatitude(), position.getLongitude(),
+                Collections.EMPTY_LIST);
+        Mockito.when(standRepository.save(any(Stand.class))).thenReturn(stand1);
 
-        assertThat(newStand, is(stand1));
-    }*/
+        final StandDTO standDTO = new StandDTO(beacon.getId(), "stand1", "Primer stand de la feria",
+                "...", "...", 1);
+        final StandDTO newStand = standService.create(standDTO);
+
+        assertThat(newStand.getId(), is(stand1.getId()));
+        assertThat(newStand.getTitle(), is(stand1.getTitle()));
+        assertThat(newStand.getShortDescription(), is(stand1.getShortDescription()));
+    }
 
     @Test
     public void getAll_notEmptyList_isOk() {
-        final List<Stand> stands = standService.getAll();
+        final List<StandDTO> stands = standService.getAll();
 
         assertThat(stands, hasSize(2));
     }
@@ -87,14 +110,14 @@ public class StandServiceTest {
     public void getAll_emptyList_isOk() {
         Mockito.when(standRepository.findAll()).thenReturn(new ArrayList<>());
 
-        final List<Stand> stands = standService.getAll();
+        final List<StandDTO> stands = standService.getAll();
 
         assertThat(stands, empty());
     }
 
     @Test
     public void getById_validId_isOk() throws ResourceNotFoundException {
-        final Stand stand = standService.getById("0C:F3:EE:04:19:2F");
+        final StandDTO stand = standService.getById("0C:F3:EE:04:19:2F");
 
         assertThat(stand.getId(), is("0C:F3:EE:04:19:2F"));
     }

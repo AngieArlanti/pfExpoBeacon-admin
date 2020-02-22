@@ -11,9 +11,11 @@ import itba.edu.ar.pfExpoBeaconadmin.api.stand.domain.Stand;
 import itba.edu.ar.pfExpoBeaconadmin.api.stand.domain.StandRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Stand Service
@@ -39,7 +41,7 @@ class StandService {
      * Create new stand
      *
      * @param standDTO Stand DTO
-     * @return new Stand
+     * @return new Stand DTO
      * @throws BeaconNotFoundException
      * @throws PositionNotFoundException
      */
@@ -55,18 +57,24 @@ class StandService {
     }
 
     /**
-     * @return list of stands
+     * @return list of stand's DTO
      */
-    List<Stand> getAll() {
-        return standRepository.findAll();
+    List<StandDTO> getAll() {
+        return standRepository.findAll()
+                .stream().map(stand -> standMapper.toDto(stand))
+                .collect(Collectors.toList());
     }
 
     /**
      * @param standId String - Stand id
-     * @return Stand
+     * @return StandDTO
      * @throws ResourceNotFoundException if stand not found
      */
-    Stand getById(final String standId) throws ResourceNotFoundException {
+    StandDTO getById(final String standId) throws ResourceNotFoundException {
+        return standMapper.toDto(getStandById(standId));
+    }
+
+    private Stand getStandById(final String standId) throws ResourceNotFoundException {
         return standRepository.findById(standId)
                 .orElseThrow(() -> new ResourceNotFoundException("Stand not found for this id :: " + standId));
     }
@@ -76,13 +84,21 @@ class StandService {
      * @throws ResourceNotFoundException if stand not found
      */
     void deleteById(final String standId) throws ResourceNotFoundException, PositionNotFoundException {
-        final Stand stand = getById(standId);
+        final Stand stand = getStandById(standId);
         standRepository.delete(stand);
         beaconService.available(standId);
         positionService.available(stand.getLatitude(), stand.getLongitude());
     }
 
-    Stand edit(final Stand stand) {
-        return standRepository.save(stand);
+    // TODO: (ma 2020-02-22) check this method
+    StandDTO edit(final String standId, final @Valid StandDTO standDTO)
+            throws ResourceNotFoundException, PictureStorageException {
+        getStandById(standId);
+        if (StringUtils.isEmpty(standDTO.getId())) {
+            standDTO.setId(standId);
+        }
+        final List<Picture> pictures = pictureService.storePictures(standDTO.getUploadedFiles());
+        standDTO.setPictures(pictures);
+        return standMapper.toDto(standRepository.save(standMapper.toModel(standDTO)));
     }
 }

@@ -7,7 +7,8 @@ public class StandMapper {
     public StandDTO toDto(final Stand stand) {
         return new StandDTO(stand.getId(), stand.getTitle(),
                 stand.getShortDescription(), stand.getDescription(),
-                stand.getCover(), stand.getLatitude(), stand.getLongitude());
+                stand.getCover(), stand.getLatitude(),
+                stand.getLongitude(), stand.getPictures());
     }
 
     public Stand toModel(final StandDTO standDTO) {

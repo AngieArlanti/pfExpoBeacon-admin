@@ -18,6 +18,19 @@ public class Position {
     public Position() {
     }
 
+    /**
+     * Constructor. For test purposes
+     *
+     * @param id        id
+     * @param longitude longitude
+     * @param latitude  latitude
+     */
+    public Position(final int id, final double longitude, final double latitude) {
+        this.id = id;
+        this.longitude = longitude;
+        this.latitude = latitude;
+    }
+
     public int getId() {
         return id;
     }

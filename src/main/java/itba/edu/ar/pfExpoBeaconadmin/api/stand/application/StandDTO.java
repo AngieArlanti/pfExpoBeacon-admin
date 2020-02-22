@@ -65,7 +65,8 @@ public class StandDTO {
     StandDTO(final String id, final @NotBlank(message = "Title is mandatory") String title,
              final @NotBlank(message = "Short description is mandatory") String shortDescription,
              final String description, final @NotBlank(message = "Cover is mandatory") String cover,
-             final double latitude, final double longitude) {
+             final double latitude, final double longitude,
+             final @NotNull(message = "Picture is mandatory") List<Picture> pictures) {
         this.id = id;
         this.title = title;
         this.shortDescription = shortDescription;
@@ -73,6 +74,28 @@ public class StandDTO {
         this.cover = cover;
         this.latitude = latitude;
         this.longitude = longitude;
+        this.pictures = pictures;
+    }
+
+    /**
+     * Constructor. For test purposes
+     *
+     * @param id               id
+     * @param title            title
+     * @param shortDescription short description
+     * @param description      description
+     * @param cover            cover
+     * @param positionId       position id
+     */
+    public StandDTO(final String id, final String title,
+                    final String shortDescription, final String description,
+                    final String cover, final int positionId) {
+        this.id = id;
+        this.title = title;
+        this.shortDescription = shortDescription;
+        this.description = description;
+        this.cover = cover;
+        this.positionId = positionId;
     }
 
     public String getId() {

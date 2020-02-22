@@ -4,10 +4,12 @@ import itba.edu.ar.pfExpoBeaconadmin.api.exception.*;
 import itba.edu.ar.pfExpoBeaconadmin.api.stand.domain.Stand;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
+import javax.validation.ValidationException;
 import java.util.List;
 
 @RestController
@@ -27,14 +29,14 @@ public class StandController {
     }
 
     @GetMapping("/stands")
-    public List<Stand> getAllStands() {
+    public List<StandDTO> getAllStands() {
         return standService.getAll();
     }
 
     @GetMapping("/stand/{id}")
-    public ResponseEntity<Stand> getStandById(final @PathVariable("id") String id) throws ResourceNotFoundException {
-        final Stand stand = standService.getById(id);
-        return ResponseEntity.ok(stand);
+    public ResponseEntity<StandDTO> getStandById(final @PathVariable("id") String id)
+            throws ResourceNotFoundException {
+        return ResponseEntity.ok(standService.getById(id));
     }
 
     @GetMapping("/stand/delete/{id}")
@@ -44,8 +46,16 @@ public class StandController {
         return ResponseEntity.ok().build();
     }
 
-    @PostMapping("/stand/edit")
-    public ResponseEntity<Stand> editStand(@Valid final @RequestBody Stand stand) {
-        return ResponseEntity.ok(standService.edit(stand));
+    @PostMapping("/stand/edit/{id}")
+    public ResponseEntity<StandDTO> editStand(final @PathVariable("id") String id,
+                                              @RequestPart(value = "stand") @Valid final StandDTO standDTO,
+                                              @RequestPart(value = "files") final List<MultipartFile> uploadedFile)
+            throws ResourceNotFoundException, PictureStorageException {
+        if (!StringUtils.isEmpty(standDTO.getId()) && !id.equalsIgnoreCase(standDTO.getId())) {
+            //TODO: (ma 2020-02-22) check message
+            throw new ValidationException("Invalid stand id");
+        }
+        standDTO.setUploadedFiles(uploadedFile);
+        return ResponseEntity.ok(standService.edit(id, standDTO));
     }
 }
