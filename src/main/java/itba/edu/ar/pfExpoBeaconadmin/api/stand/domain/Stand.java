@@ -41,6 +41,16 @@ public class Stand {
     //TODO: (ma 2020-2-19) add pictures
 
     /**
+     * Stand's latitude position.
+     */
+    private double latitude;
+
+    /**
+     * Stand's longitude position.
+     */
+    private double longitude;
+
+    /**
      * Empty constructor. For Hibernate purposes.
      */
     public Stand() {
@@ -57,6 +67,30 @@ public class Stand {
         this.id = id;
         this.title = title;
         this.shortDescription = shortDescription;
+    }
+
+    /**
+     * Constructor. For mapper purposes
+     *
+     * @param id
+     * @param title
+     * @param shortDescription
+     * @param description
+     * @param cover
+     * @param latitude
+     * @param longitude
+     */
+    public Stand(final String id, final @NotBlank(message = "Title is mandatory") String title,
+                 final @NotBlank(message = "Short description is mandatory") String shortDescription,
+                 final String description, final @NotBlank(message = "Cover is mandatory") String cover,
+                 final double latitude, final double longitude) {
+        this.id = id;
+        this.title = title;
+        this.shortDescription = shortDescription;
+        this.description = description;
+        this.cover = cover;
+        this.latitude = latitude;
+        this.longitude = longitude;
     }
 
     /**
@@ -106,5 +140,23 @@ public class Stand {
      */
     public String getCover() {
         return cover;
+    }
+
+    /**
+     * Returns the Stand's latitude position.
+     *
+     * @return the Stand's latitude position.
+     */
+    public double getLatitude() {
+        return latitude;
+    }
+
+    /**
+     * Returns the Stand's longitude position.
+     *
+     * @return the Stand's longitude position.
+     */
+    public double getLongitude() {
+        return longitude;
     }
 }

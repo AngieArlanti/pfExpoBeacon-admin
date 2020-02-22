@@ -26,7 +26,15 @@ public class Beacon {
         return used;
     }
 
-    public void setUsed(final boolean used) {
+    private void setUsed(final boolean used) {
         this.used = used;
+    }
+
+    public void used() {
+        setUsed(true);
+    }
+
+    public void avaliable() {
+        setUsed(false);
     }
 }

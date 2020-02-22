@@ -1,8 +1,11 @@
 package itba.edu.ar.pfExpoBeaconadmin.api.stand.application;
 
 import itba.edu.ar.pfExpoBeaconadmin.api.exception.BeaconNotFoundException;
+import itba.edu.ar.pfExpoBeaconadmin.api.exception.PositionNotAvailableException;
+import itba.edu.ar.pfExpoBeaconadmin.api.exception.PositionNotFoundException;
 import itba.edu.ar.pfExpoBeaconadmin.api.exception.ResourceNotFoundException;
 import itba.edu.ar.pfExpoBeaconadmin.api.stand.domain.Stand;
+import itba.edu.ar.pfExpoBeaconadmin.api.stand.domain.StandDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,10 +21,9 @@ public class StandController {
     private StandService standService;
 
     @PostMapping("/stand/add")
-    public ResponseEntity<Stand> addStand(@Valid final @RequestBody Stand stand) throws BeaconNotFoundException {
-        //TODO: (ma 2020-2-19) validate info
-        final Stand newStand = standService.create(stand);
-        return ResponseEntity.ok(newStand);
+    public ResponseEntity<StandDTO> addStand(@Valid final @RequestBody StandDTO standDTO)
+            throws BeaconNotFoundException, PositionNotFoundException, PositionNotAvailableException {
+        return ResponseEntity.ok(standService.create(standDTO));
     }
 
     @GetMapping("/stands")
@@ -36,14 +38,14 @@ public class StandController {
     }
 
     @GetMapping("/stand/delete/{id}")
-    public ResponseEntity<Void> delete(final @PathVariable("id") String id) throws ResourceNotFoundException {
+    public ResponseEntity<Void> delete(final @PathVariable("id") String id) throws ResourceNotFoundException,
+            PositionNotFoundException {
         standService.deleteById(id);
         return ResponseEntity.ok().build();
     }
 
     @PostMapping("/stand/edit")
     public ResponseEntity<Stand> editStand(@Valid final @RequestBody Stand stand) {
-        //TODO: (ma 2020-2-20) validate info
         return ResponseEntity.ok(standService.edit(stand));
     }
 }
