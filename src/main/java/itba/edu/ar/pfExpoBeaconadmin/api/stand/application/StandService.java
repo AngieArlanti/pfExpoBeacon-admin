@@ -1,16 +1,13 @@
 package itba.edu.ar.pfExpoBeaconadmin.api.stand.application;
 
-import itba.edu.ar.pfExpoBeaconadmin.api.exception.BeaconNotFoundException;
+import itba.edu.ar.pfExpoBeaconadmin.api.exception.*;
 import itba.edu.ar.pfExpoBeaconadmin.api.beacon.application.BeaconService;
 import itba.edu.ar.pfExpoBeaconadmin.api.beacon.model.Beacon;
-import itba.edu.ar.pfExpoBeaconadmin.api.exception.PositionNotAvailableException;
-import itba.edu.ar.pfExpoBeaconadmin.api.exception.PositionNotFoundException;
-import itba.edu.ar.pfExpoBeaconadmin.api.exception.ResourceNotFoundException;
+import itba.edu.ar.pfExpoBeaconadmin.api.picture.application.PictureService;
+import itba.edu.ar.pfExpoBeaconadmin.api.picture.model.Picture;
 import itba.edu.ar.pfExpoBeaconadmin.api.position.application.PositionService;
 import itba.edu.ar.pfExpoBeaconadmin.api.position.model.Position;
 import itba.edu.ar.pfExpoBeaconadmin.api.stand.domain.Stand;
-import itba.edu.ar.pfExpoBeaconadmin.api.stand.domain.StandDTO;
-import itba.edu.ar.pfExpoBeaconadmin.api.stand.domain.StandMapper;
 import itba.edu.ar.pfExpoBeaconadmin.api.stand.domain.StandRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -33,6 +30,9 @@ class StandService {
     @Autowired
     private PositionService positionService;
 
+    @Autowired
+    private PictureService pictureService;
+
     private StandMapper standMapper = new StandMapper();
 
     /**
@@ -44,11 +44,13 @@ class StandService {
      * @throws PositionNotFoundException
      */
     StandDTO create(final @Valid StandDTO standDTO) throws BeaconNotFoundException, PositionNotFoundException,
-            PositionNotAvailableException {
+            PositionNotAvailableException, PictureStorageException {
         final Beacon beacon = beaconService.getBeacon();
         standDTO.setId(beacon.getId());
         final Position position = positionService.used(standDTO.getPositionId());
         standDTO.setPosition(position);
+        final List<Picture> pictures = pictureService.storePictures(standDTO.getUploadedFiles());
+        standDTO.setPictures(pictures);
         return standMapper.toDto(standRepository.save(standMapper.toModel(standDTO)));
     }
 

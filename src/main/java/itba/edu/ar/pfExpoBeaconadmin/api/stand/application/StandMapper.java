@@ -1,4 +1,6 @@
-package itba.edu.ar.pfExpoBeaconadmin.api.stand.domain;
+package itba.edu.ar.pfExpoBeaconadmin.api.stand.application;
+
+import itba.edu.ar.pfExpoBeaconadmin.api.stand.domain.Stand;
 
 public class StandMapper {
 
@@ -12,6 +14,6 @@ public class StandMapper {
         return new Stand(standDTO.getId(), standDTO.getTitle(),
                 standDTO.getShortDescription(), standDTO.getDescription(),
                 standDTO.getCover(), standDTO.getLatitude(),
-                standDTO.getLongitude());
+                standDTO.getLongitude(), standDTO.getPictures());
     }
 }

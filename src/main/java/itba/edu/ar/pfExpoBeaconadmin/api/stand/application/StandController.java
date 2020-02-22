@@ -1,14 +1,11 @@
 package itba.edu.ar.pfExpoBeaconadmin.api.stand.application;
 
-import itba.edu.ar.pfExpoBeaconadmin.api.exception.BeaconNotFoundException;
-import itba.edu.ar.pfExpoBeaconadmin.api.exception.PositionNotAvailableException;
-import itba.edu.ar.pfExpoBeaconadmin.api.exception.PositionNotFoundException;
-import itba.edu.ar.pfExpoBeaconadmin.api.exception.ResourceNotFoundException;
+import itba.edu.ar.pfExpoBeaconadmin.api.exception.*;
 import itba.edu.ar.pfExpoBeaconadmin.api.stand.domain.Stand;
-import itba.edu.ar.pfExpoBeaconadmin.api.stand.domain.StandDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -21,8 +18,11 @@ public class StandController {
     private StandService standService;
 
     @PostMapping("/stand/add")
-    public ResponseEntity<StandDTO> addStand(@Valid final @RequestBody StandDTO standDTO)
-            throws BeaconNotFoundException, PositionNotFoundException, PositionNotAvailableException {
+    public ResponseEntity<StandDTO> addStand(@RequestPart(value = "stand") @Valid final StandDTO standDTO,
+                                             @RequestPart(value = "files") final List<MultipartFile> uploadedFile)
+            throws BeaconNotFoundException, PositionNotFoundException, PositionNotAvailableException,
+            PictureStorageException {
+        standDTO.setUploadedFiles(uploadedFile);
         return ResponseEntity.ok(standService.create(standDTO));
     }
 

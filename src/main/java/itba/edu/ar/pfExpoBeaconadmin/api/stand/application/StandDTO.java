@@ -1,9 +1,12 @@
-package itba.edu.ar.pfExpoBeaconadmin.api.stand.domain;
+package itba.edu.ar.pfExpoBeaconadmin.api.stand.application;
 
+import itba.edu.ar.pfExpoBeaconadmin.api.picture.model.Picture;
 import itba.edu.ar.pfExpoBeaconadmin.api.position.model.Position;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import java.util.List;
 
 public class StandDTO {
 
@@ -34,6 +37,11 @@ public class StandDTO {
      */
     @NotBlank(message = "Cover is mandatory")
     private String cover;
+
+    private List<MultipartFile> uploadedFiles;
+
+    private List<Picture> pictures;
+
 
     /**
      * Stand's latitude position.
@@ -106,5 +114,21 @@ public class StandDTO {
     public void setPosition(final Position position) {
         this.latitude = position.getLatitude();
         this.longitude = position.getLongitude();
+    }
+
+    public List<MultipartFile> getUploadedFiles() {
+        return uploadedFiles;
+    }
+
+    public void setPictures(final List<Picture> pictures) {
+        this.pictures = pictures;
+    }
+
+    public List<Picture> getPictures() {
+        return pictures;
+    }
+
+    public void setUploadedFiles(final List<MultipartFile> uploadedFile) {
+        this.uploadedFiles = uploadedFile;
     }
 }

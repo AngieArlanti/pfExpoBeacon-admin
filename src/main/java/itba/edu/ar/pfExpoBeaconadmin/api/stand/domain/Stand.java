@@ -1,7 +1,13 @@
 package itba.edu.ar.pfExpoBeaconadmin.api.stand.domain;
 
+import itba.edu.ar.pfExpoBeaconadmin.api.picture.model.Picture;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import java.util.List;
 
 /**
  * A Stand.
@@ -38,7 +44,13 @@ public class Stand {
     @NotBlank(message = "Cover is mandatory")
     private String cover;
 
-    //TODO: (ma 2020-2-19) add pictures
+    @OneToMany(cascade = CascadeType.ALL)
+    @Fetch(FetchMode.JOIN)
+    @ElementCollection(fetch = FetchType.EAGER)
+    @CollectionTable(name = "stand_pictures", joinColumns = @JoinColumn(name = "stand_id"))
+    @Column(name = "picture", nullable = false)
+    @NotNull(message = "Picture is mandatory")
+    private List<Picture> pictures;
 
     /**
      * Stand's latitude position.
@@ -83,7 +95,7 @@ public class Stand {
     public Stand(final String id, final @NotBlank(message = "Title is mandatory") String title,
                  final @NotBlank(message = "Short description is mandatory") String shortDescription,
                  final String description, final @NotBlank(message = "Cover is mandatory") String cover,
-                 final double latitude, final double longitude) {
+                 final double latitude, final double longitude, final List<Picture> pictures) {
         this.id = id;
         this.title = title;
         this.shortDescription = shortDescription;
@@ -91,6 +103,7 @@ public class Stand {
         this.cover = cover;
         this.latitude = latitude;
         this.longitude = longitude;
+        this.pictures = pictures;
     }
 
     /**
@@ -158,5 +171,9 @@ public class Stand {
      */
     public double getLongitude() {
         return longitude;
+    }
+
+    public List<Picture> getPictures() {
+        return pictures;
     }
 }
