@@ -10,6 +10,9 @@ class ListStandsComponent extends Component {
             message: null
         }
         this.refreshStands= this.refreshStands.bind(this)
+        this.deleteStandClicked = this.deleteStandClicked.bind(this)
+        this.addStandClicked = this.addStandClicked.bind(this)
+        this.editStandClicked = this.editStandClicked.bind(this)
     }
 
     componentDidMount() {
@@ -26,16 +29,41 @@ class ListStandsComponent extends Component {
             )
     }
 
+    deleteStandClicked(id) {
+        AdminDataService.deleteStand(id)
+            .then(
+                response => {
+                    this.setState({ message: `Delete of stand ${id} Successful` })
+                    this.refreshStands()
+                }
+            )
+
+    }
+
+    addStandClicked() {
+        this.props.history.push(`/stands/add`)
+    }
+
+    editStandClicked(id) {
+        this.props.history.push(`/stands/${id}`)
+    }
+
     render() {
         return (
             <div className="container">
                 <h3>All Stands</h3>
+                {this.state.message && <div class="alert alert-success">{this.state.message}</div>}
                 <div className="container">
+                    {/* <div className="float-right">
+                         <button className="btn btn-success" onClick={this.addStandClicked}>Add Stand</button>
+                     </div> */}
                     <table className="table">
                         <thead>
                             <tr>
-                                <th>Id</th>
+                                <th></th>
+                                <th>Title</th>
                                 <th>Description</th>
+                                <th>Actions</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -43,8 +71,13 @@ class ListStandsComponent extends Component {
                                 this.state.stands.map(
                                     stand =>
                                         <tr key={stand.id}>
-                                            <td>{stand.id}</td>
+                                            <th>{stand.cover}</th>
                                             <td>{stand.title}</td>
+                                            <td>{stand.short_description}</td>
+                                            <td>
+                                                {/* <button className="btn btn-outline-secondary" onClick={() => this.editStandClicked(stand.id)}>Edit</button> */}
+                                                <button className="btn btn-outline-danger" onClick={() => this.deleteStandClicked(stand.id)}>Delete</button>
+                                            </td>
                                         </tr>
                                 )
                             }
