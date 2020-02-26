@@ -1,8 +1,6 @@
 package itba.edu.ar.pfExpoBeaconadmin.api.stand.application;
 
 import itba.edu.ar.pfExpoBeaconadmin.api.beacon.model.Beacon;
-import itba.edu.ar.pfExpoBeaconadmin.api.picture.model.Picture;
-import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -38,9 +36,8 @@ public class StandDTO {
     @NotBlank(message = "Cover is mandatory")
     private String cover;
 
-    private List<MultipartFile> uploadedFiles;
-
-    private List<Picture> pictures;
+    @NotNull(message = "Picture is mandatory")
+    private List<String> pictures;
 
 
     /**
@@ -66,7 +63,7 @@ public class StandDTO {
              final @NotBlank(message = "Short description is mandatory") String shortDescription,
              final String description, final @NotBlank(message = "Cover is mandatory") String cover,
              final double latitude, final double longitude,
-             final @NotNull(message = "Picture is mandatory") List<Picture> pictures) {
+             final @NotNull(message = "Picture is mandatory") List<String> pictures) {
         this.id = id;
         this.title = title;
         this.shortDescription = shortDescription;
@@ -80,20 +77,21 @@ public class StandDTO {
     /**
      * Constructor. For test purposes
      *
-     * @param id               id
      * @param title            title
      * @param shortDescription short description
      * @param description      description
      * @param cover            cover
+     * @param beaconId         beaconId
      */
-    public StandDTO(final String id, final String title,
+    public StandDTO(final String title,
                     final String shortDescription, final String description,
-                    final String cover) {
+                    final String cover, final String beaconId) {
         this.id = id;
         this.title = title;
         this.shortDescription = shortDescription;
         this.description = description;
         this.cover = cover;
+        this.beaconId = beaconId;
     }
 
     public String getId() {
@@ -132,20 +130,8 @@ public class StandDTO {
         this.id = id;
     }
 
-    public List<MultipartFile> getUploadedFiles() {
-        return uploadedFiles;
-    }
-
-    public void setPictures(final List<Picture> pictures) {
-        this.pictures = pictures;
-    }
-
-    public List<Picture> getPictures() {
+    public List<String> getPictures() {
         return pictures;
-    }
-
-    public void setUploadedFiles(final List<MultipartFile> uploadedFile) {
-        this.uploadedFiles = uploadedFile;
     }
 
     public void setBeacon(final Beacon beacon) {

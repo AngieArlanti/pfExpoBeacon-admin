@@ -14,7 +14,7 @@ public class BeaconService {
     @Autowired
     private BeaconRepository beaconRepository;
 
-    private Beacon getById(final String beaconId) throws ResourceNotFoundException {
+    public Beacon getById(final String beaconId) throws ResourceNotFoundException {
         return beaconRepository.findById(beaconId)
                 .orElseThrow(() -> new ResourceNotFoundException("Beacon not found for this id :: " + beaconId));
 

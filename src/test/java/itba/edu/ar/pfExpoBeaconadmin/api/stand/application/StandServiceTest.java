@@ -1,11 +1,9 @@
 package itba.edu.ar.pfExpoBeaconadmin.api.stand.application;
 
 import itba.edu.ar.pfExpoBeaconadmin.api.beacon.application.BeaconNotAvailableException;
-import itba.edu.ar.pfExpoBeaconadmin.api.beacon.application.BeaconNotFoundException;
 import itba.edu.ar.pfExpoBeaconadmin.api.beacon.application.BeaconService;
 import itba.edu.ar.pfExpoBeaconadmin.api.beacon.model.Beacon;
 import itba.edu.ar.pfExpoBeaconadmin.api.exception.*;
-import itba.edu.ar.pfExpoBeaconadmin.api.picture.application.PictureService;
 import itba.edu.ar.pfExpoBeaconadmin.api.stand.domain.Stand;
 import itba.edu.ar.pfExpoBeaconadmin.api.stand.domain.StandRepository;
 import org.junit.Before;
@@ -52,9 +50,6 @@ public class StandServiceTest {
     @MockBean
     private BeaconService beaconService;
 
-    @MockBean
-    private PictureService pictureService;
-
     @Rule
     public ExpectedException exceptionRule = ExpectedException.none();
 
@@ -76,8 +71,7 @@ public class StandServiceTest {
 
 
     @Test
-    public void create_newStandWhenValidData_isOk() throws BeaconNotFoundException,
-            BeaconNotAvailableException, PictureStorageException, ResourceNotFoundException {
+    public void create_newStandWhenValidData_isOk() throws BeaconNotAvailableException, ResourceNotFoundException {
         final Beacon beacon = new Beacon("1", -34.6403175, -58.4018125);
         Mockito.when(beaconService.used("1")).thenReturn(beacon);
         final Stand stand1 = new Stand(beacon.getId(), "stand1", "Primer stand de la feria",
@@ -85,8 +79,8 @@ public class StandServiceTest {
                 Collections.EMPTY_LIST);
         Mockito.when(standRepository.save(any(Stand.class))).thenReturn(stand1);
 
-        final StandDTO standDTO = new StandDTO(beacon.getId(), "stand1", "Primer stand de la feria",
-                "...", "...");
+        final StandDTO standDTO = new StandDTO("stand1", "Primer stand de la feria",
+                "...", "...", beacon.getId());
         final StandDTO newStand = standService.create(standDTO);
 
         assertThat(newStand.getId(), is(stand1.getId()));

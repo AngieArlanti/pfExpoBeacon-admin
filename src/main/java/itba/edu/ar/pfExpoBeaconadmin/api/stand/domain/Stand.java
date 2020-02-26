@@ -1,6 +1,5 @@
 package itba.edu.ar.pfExpoBeaconadmin.api.stand.domain;
 
-import itba.edu.ar.pfExpoBeaconadmin.api.picture.model.Picture;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 
@@ -44,13 +43,15 @@ public class Stand {
     @NotBlank(message = "Cover is mandatory")
     private String cover;
 
-    @OneToMany(cascade = CascadeType.ALL)
+    /**
+     * The Stand's picture list.
+     */
     @Fetch(FetchMode.JOIN)
     @ElementCollection(fetch = FetchType.EAGER)
-    @CollectionTable(name = "stand_pictures", joinColumns = @JoinColumn(name = "stand_id"))
+    @CollectionTable(name="stand_pictures", joinColumns=@JoinColumn(name="stand_id"))
     @Column(name = "picture", nullable = false)
     @NotNull(message = "Picture is mandatory")
-    private List<Picture> pictures;
+    private List<String> pictures;
 
     /**
      * Stand's latitude position.
@@ -95,7 +96,7 @@ public class Stand {
     public Stand(final String id, final @NotBlank(message = "Title is mandatory") String title,
                  final @NotBlank(message = "Short description is mandatory") String shortDescription,
                  final String description, final @NotBlank(message = "Cover is mandatory") String cover,
-                 final double latitude, final double longitude, final List<Picture> pictures) {
+                 final double latitude, final double longitude, final List<String> pictures) {
         this.id = id;
         this.title = title;
         this.shortDescription = shortDescription;
@@ -173,7 +174,7 @@ public class Stand {
         return longitude;
     }
 
-    public List<Picture> getPictures() {
+    public List<String> getPictures() {
         return pictures;
     }
 }
