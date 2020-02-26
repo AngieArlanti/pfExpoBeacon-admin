@@ -1,7 +1,7 @@
 package itba.edu.ar.pfExpoBeaconadmin.api.stand.application;
 
+import itba.edu.ar.pfExpoBeaconadmin.api.beacon.model.Beacon;
 import itba.edu.ar.pfExpoBeaconadmin.api.picture.model.Picture;
-import itba.edu.ar.pfExpoBeaconadmin.api.position.model.Position;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.constraints.NotBlank;
@@ -54,10 +54,10 @@ public class StandDTO {
     private double longitude;
 
     /**
-     * Stand's position id.
+     * Stand's beacon id.
      */
-    @NotNull(message = "Position is mandatory")
-    private Integer positionId;
+    @NotNull(message = "Beacon is mandatory")
+    private String beaconId;
 
     public StandDTO() {
     }
@@ -85,17 +85,15 @@ public class StandDTO {
      * @param shortDescription short description
      * @param description      description
      * @param cover            cover
-     * @param positionId       position id
      */
     public StandDTO(final String id, final String title,
                     final String shortDescription, final String description,
-                    final String cover, final int positionId) {
+                    final String cover) {
         this.id = id;
         this.title = title;
         this.shortDescription = shortDescription;
         this.description = description;
         this.cover = cover;
-        this.positionId = positionId;
     }
 
     public String getId() {
@@ -126,17 +124,12 @@ public class StandDTO {
         return title;
     }
 
-    public Integer getPositionId() {
-        return positionId;
+    public String getBeaconId() {
+        return beaconId;
     }
 
     public void setId(final String id) {
         this.id = id;
-    }
-
-    public void setPosition(final Position position) {
-        this.latitude = position.getLatitude();
-        this.longitude = position.getLongitude();
     }
 
     public List<MultipartFile> getUploadedFiles() {
@@ -153,5 +146,11 @@ public class StandDTO {
 
     public void setUploadedFiles(final List<MultipartFile> uploadedFile) {
         this.uploadedFiles = uploadedFile;
+    }
+
+    public void setBeacon(final Beacon beacon) {
+        this.id = beacon.getId();
+        this.latitude = beacon.getLatitude();
+        this.longitude = beacon.getLongitude();
     }
 }

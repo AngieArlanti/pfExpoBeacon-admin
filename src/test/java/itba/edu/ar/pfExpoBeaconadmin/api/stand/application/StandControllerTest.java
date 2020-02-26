@@ -31,9 +31,9 @@ public class StandControllerTest {
     @Before
     public void setUp() {
         final StandDTO stand1 = new StandDTO("1", "stand1", "Primer stand de la feria",
-                "...", "...", 1);
+                "...", "...");
         final StandDTO stand2 = new StandDTO("2", "stand2", "Segundo stand de la feria",
-                "...", "...", 2);
+                "...", "...");
 
         final List<StandDTO> standDTOList = new ArrayList<>();
         standDTOList.add(stand1);

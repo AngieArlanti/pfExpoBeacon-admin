@@ -2,7 +2,6 @@ package itba.edu.ar.pfExpoBeaconadmin.api.beacon.application;
 
 import itba.edu.ar.pfExpoBeaconadmin.api.beacon.model.Beacon;
 import itba.edu.ar.pfExpoBeaconadmin.api.beacon.model.BeaconRepository;
-import itba.edu.ar.pfExpoBeaconadmin.api.exception.BeaconNotFoundException;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -42,18 +41,5 @@ public class BeaconServiceTest {
     @Rule
     public ExpectedException exceptionRule = ExpectedException.none();
 
-    @Before
-    public void setUp() {
-        final Beacon beacon1 = new Beacon("0C:F3:EE:08:FC:DD");
-
-        Mockito.when(beaconRepository.findFirstByUsedFalse()).thenReturn(Optional.of(beacon1));
-    }
-
-    @Test
-    public void getOneBeaconNotUsed_isBeaconAvailable_isOk() throws BeaconNotFoundException {
-        final Beacon beacon = beaconService.getOneBeaconNotUsed();
-
-        assertThat(beacon.getId(), is("0C:F3:EE:08:FC:DD"));
-    }
 
 }

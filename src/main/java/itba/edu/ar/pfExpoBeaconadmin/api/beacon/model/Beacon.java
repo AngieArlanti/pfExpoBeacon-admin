@@ -11,11 +11,17 @@ public class Beacon {
 
     private boolean used = false;
 
+    private double longitude;
+
+    private double latitude;
+
     public Beacon() {
     }
 
-    public Beacon(final String id) {
+    public Beacon(final String id, final double longitude, final double latitude) {
         this.id = id;
+        this.latitude = latitude;
+        this.longitude = longitude;
     }
 
     public String getId() {
@@ -36,5 +42,13 @@ public class Beacon {
 
     public void avaliable() {
         setUsed(false);
+    }
+
+    public double getLongitude() {
+        return longitude;
+    }
+
+    public double getLatitude() {
+        return latitude;
     }
 }

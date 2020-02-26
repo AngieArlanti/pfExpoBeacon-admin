@@ -1,11 +1,11 @@
 package itba.edu.ar.pfExpoBeaconadmin.api.stand.application;
 
+import itba.edu.ar.pfExpoBeaconadmin.api.beacon.application.BeaconNotAvailableException;
+import itba.edu.ar.pfExpoBeaconadmin.api.beacon.application.BeaconNotFoundException;
 import itba.edu.ar.pfExpoBeaconadmin.api.beacon.application.BeaconService;
 import itba.edu.ar.pfExpoBeaconadmin.api.beacon.model.Beacon;
 import itba.edu.ar.pfExpoBeaconadmin.api.exception.*;
 import itba.edu.ar.pfExpoBeaconadmin.api.picture.application.PictureService;
-import itba.edu.ar.pfExpoBeaconadmin.api.position.application.PositionService;
-import itba.edu.ar.pfExpoBeaconadmin.api.position.model.Position;
 import itba.edu.ar.pfExpoBeaconadmin.api.stand.domain.Stand;
 import itba.edu.ar.pfExpoBeaconadmin.api.stand.domain.StandRepository;
 import org.junit.Before;
@@ -53,9 +53,6 @@ public class StandServiceTest {
     private BeaconService beaconService;
 
     @MockBean
-    private PositionService positionService;
-
-    @MockBean
     private PictureService pictureService;
 
     @Rule
@@ -80,18 +77,16 @@ public class StandServiceTest {
 
     @Test
     public void create_newStandWhenValidData_isOk() throws BeaconNotFoundException,
-            PositionNotFoundException, PositionNotAvailableException, PictureStorageException {
-        final Beacon beacon = new Beacon("1");
-        Mockito.when(beaconService.getBeacon()).thenReturn(beacon);
-        final Position position = new Position(1, -34.6403175, -58.4018125);
-        Mockito.when(positionService.used(1)).thenReturn(position);
+            BeaconNotAvailableException, PictureStorageException, ResourceNotFoundException {
+        final Beacon beacon = new Beacon("1", -34.6403175, -58.4018125);
+        Mockito.when(beaconService.used("1")).thenReturn(beacon);
         final Stand stand1 = new Stand(beacon.getId(), "stand1", "Primer stand de la feria",
-                "...", "...", position.getLatitude(), position.getLongitude(),
+                "...", "...", beacon.getLatitude(), beacon.getLongitude(),
                 Collections.EMPTY_LIST);
         Mockito.when(standRepository.save(any(Stand.class))).thenReturn(stand1);
 
         final StandDTO standDTO = new StandDTO(beacon.getId(), "stand1", "Primer stand de la feria",
-                "...", "...", 1);
+                "...", "...");
         final StandDTO newStand = standService.create(standDTO);
 
         assertThat(newStand.getId(), is(stand1.getId()));

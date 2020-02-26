@@ -1,4 +1,4 @@
-package itba.edu.ar.pfExpoBeaconadmin.api.exception;
+package itba.edu.ar.pfExpoBeaconadmin.api.beacon.application;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;

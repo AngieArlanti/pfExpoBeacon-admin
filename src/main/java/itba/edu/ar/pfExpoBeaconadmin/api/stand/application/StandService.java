@@ -1,12 +1,11 @@
 package itba.edu.ar.pfExpoBeaconadmin.api.stand.application;
 
+import itba.edu.ar.pfExpoBeaconadmin.api.beacon.application.BeaconNotAvailableException;
 import itba.edu.ar.pfExpoBeaconadmin.api.exception.*;
 import itba.edu.ar.pfExpoBeaconadmin.api.beacon.application.BeaconService;
 import itba.edu.ar.pfExpoBeaconadmin.api.beacon.model.Beacon;
 import itba.edu.ar.pfExpoBeaconadmin.api.picture.application.PictureService;
 import itba.edu.ar.pfExpoBeaconadmin.api.picture.model.Picture;
-import itba.edu.ar.pfExpoBeaconadmin.api.position.application.PositionService;
-import itba.edu.ar.pfExpoBeaconadmin.api.position.model.Position;
 import itba.edu.ar.pfExpoBeaconadmin.api.stand.domain.Stand;
 import itba.edu.ar.pfExpoBeaconadmin.api.stand.domain.StandRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,9 +29,6 @@ class StandService {
     private BeaconService beaconService;
 
     @Autowired
-    private PositionService positionService;
-
-    @Autowired
     private PictureService pictureService;
 
     private StandMapper standMapper = new StandMapper();
@@ -42,15 +38,11 @@ class StandService {
      *
      * @param standDTO Stand DTO
      * @return new Stand DTO
-     * @throws BeaconNotFoundException
-     * @throws PositionNotFoundException
      */
-    StandDTO create(final @Valid StandDTO standDTO) throws BeaconNotFoundException, PositionNotFoundException,
-            PositionNotAvailableException, PictureStorageException {
-        final Beacon beacon = beaconService.getBeacon();
-        standDTO.setId(beacon.getId());
-        final Position position = positionService.used(standDTO.getPositionId());
-        standDTO.setPosition(position);
+    StandDTO create(final @Valid StandDTO standDTO) throws PictureStorageException,
+            ResourceNotFoundException, BeaconNotAvailableException {
+        final Beacon beacon = beaconService.used(standDTO.getBeaconId());
+        standDTO.setBeacon(beacon);
         final List<Picture> pictures = pictureService.storePictures(standDTO.getUploadedFiles());
         standDTO.setPictures(pictures);
         return standMapper.toDto(standRepository.save(standMapper.toModel(standDTO)));
@@ -83,19 +75,23 @@ class StandService {
      * @param standId String - Stand id
      * @throws ResourceNotFoundException if stand not found
      */
-    void deleteById(final String standId) throws ResourceNotFoundException, PositionNotFoundException {
+    void deleteById(final String standId) throws ResourceNotFoundException {
         final Stand stand = getStandById(standId);
         standRepository.delete(stand);
         beaconService.available(standId);
-        positionService.available(stand.getLatitude(), stand.getLongitude());
     }
 
     // TODO: (ma 2020-02-22) check this method
     StandDTO edit(final String standId, final @Valid StandDTO standDTO)
-            throws ResourceNotFoundException, PictureStorageException {
-        getStandById(standId);
+            throws ResourceNotFoundException, PictureStorageException, BeaconNotAvailableException {
+        final Stand oldStand = getStandById(standId);
         if (StringUtils.isEmpty(standDTO.getId())) {
             standDTO.setId(standId);
+        }
+        if (!oldStand.getId().equalsIgnoreCase(standDTO.getId())) {
+            final Beacon newBeacon = beaconService.used(standDTO.getId());
+            standDTO.setBeacon(newBeacon);
+            beaconService.available(oldStand.getId());
         }
         final List<Picture> pictures = pictureService.storePictures(standDTO.getUploadedFiles());
         standDTO.setPictures(pictures);
