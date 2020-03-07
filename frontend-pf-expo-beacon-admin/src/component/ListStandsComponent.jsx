@@ -82,7 +82,7 @@ class ListStandsComponent extends Component {
                       >
                         Add Stand
                       </Button> */}
-                      {/* TODO Pasar este button div class a formato Button */}
+                      {/* TODO (ma 2020-03-07) Pasar este button div class a formato Button */}
                       {/* <div className="float-right">
                          <button className="btn btn-success" onClick={this.addStandClicked}>Add Stand</button>
                      </div> */}
@@ -103,7 +103,11 @@ class ListStandsComponent extends Component {
                             this.state.stands.map(
                                 stand =>
                                     <tr key={stand.id}>
-                                        <th>{stand.cover}</th>
+                                      {/* TODO (ma 2020-03-07) Ajustar el tamaño de la imagen */}
+                                        <th><img 
+                                        src={stand.cover} 
+                                        height="200px" width="250px"
+                                        /></th>
                                         <td>{stand.title}</td>
                                         <td>{stand.short_description}</td>
                                         <td>
