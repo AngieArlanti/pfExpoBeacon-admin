@@ -73,7 +73,7 @@ public class StandServiceTest {
     @Test
     public void create_newStandWhenValidData_isOk() throws BeaconNotAvailableException, ResourceNotFoundException {
         final Beacon beacon = new Beacon("1", -34.6403175, -58.4018125);
-        Mockito.when(beaconService.used("1")).thenReturn(beacon);
+        Mockito.when(beaconService.getById("1")).thenReturn(beacon);
         final Stand stand1 = new Stand(beacon.getId(), "stand1", "Primer stand de la feria",
                 "...", "...", beacon.getLatitude(), beacon.getLongitude(),
                 Collections.EMPTY_LIST);

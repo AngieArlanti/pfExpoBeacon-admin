@@ -8,7 +8,6 @@ import itba.edu.ar.pfExpoBeaconadmin.api.stand.domain.Stand;
 import itba.edu.ar.pfExpoBeaconadmin.api.stand.domain.StandRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -36,9 +35,7 @@ class StandService {
      */
     StandDTO create(final @Valid StandDTO standDTO) throws
             ResourceNotFoundException, BeaconNotAvailableException {
-        final Beacon beacon = beaconService.used(standDTO.getBeaconId());
-        standDTO.setBeacon(beacon);
-        return standMapper.toDto(standRepository.save(standMapper.toModel(standDTO)));
+        return save(standDTO, standDTO.getBeaconId());
     }
 
     /**
@@ -74,18 +71,25 @@ class StandService {
         beaconService.available(standId);
     }
 
-    // TODO: (ma 2020-02-22) check this method
     StandDTO edit(final String standId, final @Valid StandDTO standDTO)
             throws ResourceNotFoundException, BeaconNotAvailableException {
         final Stand oldStand = getStandById(standId);
+        final String beaconId;
         if (!oldStand.getId().equalsIgnoreCase(standDTO.getBeaconId())) {
-            final Beacon beacon = beaconService.used(standDTO.getBeaconId());
-            standDTO.setBeacon(beacon);
+            beaconId = standDTO.getBeaconId();
             deleteById(oldStand.getId());
         } else {
-            final Beacon beacon = beaconService.getById(oldStand.getId());
-            standDTO.setBeacon(beacon);
+            beaconId = oldStand.getId();
         }
-        return standMapper.toDto(standRepository.save(standMapper.toModel(standDTO)));
+        return save(standDTO, beaconId);
+    }
+
+    private StandDTO save(@Valid StandDTO standDTO, final String beaconId)
+            throws ResourceNotFoundException, BeaconNotAvailableException {
+        final Beacon beacon = beaconService.getById(beaconId);
+        standDTO.setBeacon(beacon);
+        final Stand stand = standRepository.save(standMapper.toModel(standDTO));
+        beaconService.used(beacon);
+        return standMapper.toDto(stand);
     }
 }

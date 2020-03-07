@@ -28,6 +28,7 @@ public class StandDTO {
     /**
      * The Stand's description.
      */
+    @NotBlank(message = "Description is mandatory")
     private String description;
 
     /**
@@ -61,7 +62,8 @@ public class StandDTO {
 
     StandDTO(final String id, final @NotBlank(message = "Title is mandatory") String title,
              final @NotBlank(message = "Short description is mandatory") String shortDescription,
-             final String description, final @NotBlank(message = "Cover is mandatory") String cover,
+             final @NotBlank(message = "Description is mandatory") String description,
+             final @NotBlank(message = "Cover is mandatory") String cover,
              final double latitude, final double longitude,
              final @NotNull(message = "Picture is mandatory") List<String> pictures) {
         this.id = id;

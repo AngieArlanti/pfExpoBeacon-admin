@@ -35,6 +35,7 @@ public class Stand {
     /**
      * The Stand's description.
      */
+    @NotBlank(message = "Description is mandatory")
     private String description;
 
     /**

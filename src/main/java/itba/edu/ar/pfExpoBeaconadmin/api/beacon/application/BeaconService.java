@@ -20,8 +20,7 @@ public class BeaconService {
 
     }
 
-    public Beacon used(final String beaconId) throws ResourceNotFoundException, BeaconNotAvailableException {
-        final Beacon beacon = getById(beaconId);
+    public Beacon used(final Beacon beacon) throws BeaconNotAvailableException {
         if (beacon.isUsed()) {
             throw new BeaconNotAvailableException();
         }
@@ -38,5 +37,4 @@ public class BeaconService {
     List<Beacon> getBeaconAvailable() {
         return beaconRepository.findByUsedFalse();
     }
-
 }
