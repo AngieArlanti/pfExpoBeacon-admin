@@ -2,18 +2,12 @@ import React, { Component } from 'react';
 import AdminDataService from '../service/AdminDataService'
 // reactstrap components
 import {
-  Button,
   Card,
   CardHeader,
-  CardBody,
-  NavItem,
-  NavLink,
-  Nav,
-  Progress,
   Table,
-  Container,
   Row,
-  Col
+  Button,
+  UncontrolledTooltip
 } from "reactstrap";
 
 class ListStandsComponent extends Component {
@@ -74,18 +68,13 @@ class ListStandsComponent extends Component {
                     </div>
                     {this.state.message && <div class="alert alert-success">{this.state.message}</div>}
                     <div className="col text-right">
-                      {/* <Button
+                       <Button
                         color="primary"
-                        href="#pablo"
-                        onClick={e => e.preventDefault()}
+                        onClick={this.addStandClicked}
                         size="sm"
                       >
                         Add Stand
-                      </Button> */}
-                      {/* TODO (ma 2020-03-07) Pasar este button div class a formato Button */}
-                      {/* <div className="float-right">
-                         <button className="btn btn-success" onClick={this.addStandClicked}>Add Stand</button>
-                     </div> */}
+                      </Button> 
                     </div>
                   </Row>
                 </CardHeader>
@@ -96,6 +85,7 @@ class ListStandsComponent extends Component {
                       <th scope="col">Title</th>
                       <th scope="col">Description</th>
                       <th scope="col">Actions</th>
+                      <th scope="col">Pictures</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -106,13 +96,40 @@ class ListStandsComponent extends Component {
                                       {/* TODO (ma 2020-03-07) Ajustar el tamaño de la imagen */}
                                         <th><img 
                                         src={stand.cover} 
-                                        height="200px" width="250px"
+                                        height="150px" width="250px"
                                         /></th>
                                         <td>{stand.title}</td>
                                         <td>{stand.short_description}</td>
                                         <td>
                                             {/* <button className="btn btn-outline-secondary" onClick={() => this.editStandClicked(stand.id)}>Edit</button> */}
                                             <button className="btn btn-outline-danger" onClick={() => this.deleteStandClicked(stand.id)}>Delete</button>
+                                        </td>
+                                        <td>
+                                          <div className="avatar-group">
+                                            {/* stand.pictures.map(
+                                              picture => 
+                                                <a
+                                                className="avatar avatar-sm"
+                                                onClick={e => e.preventDefault()}
+                                              >
+                                                <img
+                                                  alt="..."
+                                                  className="rounded-circle"
+                                                  src={picture}
+                                                />
+                                              </a>
+                                              ) */}
+                                              {/* <a
+                                                className="avatar avatar-sm"
+                                                href={stand.cover}
+                                              >
+                                                <img
+                                                  alt="..."
+                                                  className="rounded-circle"
+                                                  src={stand.cover}
+                                                />
+                                              </a> */}
+                                          </div>
                                         </td>
                                     </tr>
                             )

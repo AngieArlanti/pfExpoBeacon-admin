@@ -8,8 +8,6 @@ import {
     FormGroup,
     Form,
     Input,
-    Container,
-    Label,
     Row,
     Col,
     InputGroup,
@@ -20,6 +18,11 @@ class AddStandComponent extends Component {
 
     constructor(props) {
         super(props)
+        this.createStandClicked = this.createStandClicked.bind(this)
+    }
+
+    createStandClicked() {
+        this.props.history.push(`/stands/add`)
     }
 
     render() {
@@ -97,7 +100,7 @@ class AddStandComponent extends Component {
                                 type="url"
                                 />
                             </FormGroup>
-                            <FormGroup>
+                            {/* <FormGroup>
                                 <label className="form-control-label" htmlFor="input-pictures"> 
                                     Pictures
                                 </label>
@@ -105,8 +108,16 @@ class AddStandComponent extends Component {
                                     <InputGroupAddon addonType="append"><Button>Add picture</Button></InputGroupAddon>
                                     <Input />
                                 </InputGroup>
-                            </FormGroup>
+                            </FormGroup> */}
                         </Form>
+                        <Row className="mt-3">
+                            <Col className="text-right" xs="12">
+                                <Button color="primary" type="button" 
+                                    onClick={this.createStandClicked}>
+                                    Add
+                                </Button>
+                            </Col>
+                        </Row>
                     </CardBody>
                 </Card>
             </div>
